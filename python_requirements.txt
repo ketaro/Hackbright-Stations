@@ -1,0 +1,10 @@
+Flask
+SQLAlchemy
+alembic
+beautifulsoup4
+oauth
+pyglet
+pyquery
+python-twitter
+twitter
+virtualenv
