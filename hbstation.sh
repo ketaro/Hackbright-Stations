@@ -159,7 +159,7 @@ if [ $RUN_PACKAGE -eq 1 ]; then
     add-apt-repository 'deb http://dl.google.com/linux/chrome/deb/ stable main'
     
     # Make sure package definitions are up to date
-#    apt-get -y update
+    apt-get -y update
     
     
     # Check which packages need to be installed
@@ -184,6 +184,10 @@ if [ $RUN_PACKAGE -eq 1 ]; then
     else
       echo "No packages to install!"
     fi
+
+    # Install Additional Python packages with PIP
+    wget -O /tmp/python_requirements.txt http://pi.int.hackbrightacademy.com/python_requirements.txt
+    pip install -r /tmp/python_requirements.txt
 
     # Check that Sublime Text is installed
     if [ ! -d "/opt/Sublime Text 2" ]; then
@@ -267,10 +271,19 @@ if [ $RUN_USER -eq 1 ]; then
     # Delete the existing home directory
     rm -rf ${USER_DIR}
 
-    # Extract "clean" home directory
     pushd /home
-    /bin/gzip -cd /tmp/user-clean.tar.gz | tar -xvf -
+    # Download "Clean" user home directory
+    wget -O /tmp/user-clean.tar.gz http://pi.int.hackbrightacademy.com/user-clean.tar.gz
 
+    # Extract "clean" home directory
+    /bin/gzip -cd /tmp/user-clean.tar.gz | tar -xvf -
+    
+    # Download Sublime License File
+    wget -O /home/user/.config/sublime-text-2/Settings/License.sublime_license http://pi.int.hackbrightacademy.com/License.sublime_license
+
+    # Set ownership
+    chown -R user:user /home/user
     popd
+
 fi
 
