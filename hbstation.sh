@@ -22,7 +22,6 @@ declare -a PACKAGES=(
   wireshark tshark
   xchat
   nodejs
-  google-chrome-stable
 );
 
 
@@ -153,10 +152,6 @@ if [ $RUN_PACKAGE -eq 1 ]; then
       # Add Repository for NodeJS Packages
       add-apt-repository -y ppa:chris-lea/node.js
     fi
-    
-    # Repository for Google Chrome
-    KEYADD=`wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -`
-    add-apt-repository 'deb http://dl.google.com/linux/chrome/deb/ stable main'
     
     # Make sure package definitions are up to date
     apt-get -y update
