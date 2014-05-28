@@ -181,7 +181,7 @@ if [ $RUN_PACKAGE -eq 1 ]; then
     fi
 
     # Install Additional Python packages with PIP
-    wget -O /tmp/python_requirements.txt http://pi.int.hackbrightacademy.com/python_requirements.txt
+    wget -O /tmp/python_requirements.txt http://nuc-install.int.hackbrightacademy.com/python_requirements.txt
     pip install -r /tmp/python_requirements.txt
 
     # Check that Sublime Text is installed
@@ -268,13 +268,13 @@ if [ $RUN_USER -eq 1 ]; then
 
     pushd /home
     # Download "Clean" user home directory
-    wget -O /tmp/user-clean.tar.gz http://pi.int.hackbrightacademy.com/user-clean.tar.gz
+    wget -O /tmp/user-clean.tar.gz http://nuc-install.int.hackbrightacademy.com/user-clean.tar.gz
 
     # Extract "clean" home directory
     /bin/gzip -cd /tmp/user-clean.tar.gz | tar -xvf -
     
     # Download Sublime License File
-    wget -O /home/user/.config/sublime-text-2/Settings/License.sublime_license http://pi.int.hackbrightacademy.com/License.sublime_license
+    wget -O /home/user/.config/sublime-text-2/Settings/License.sublime_license http://nuc-install.int.hackbrightacademy.com/License.sublime_license
 
     # Set ownership
     chown -R user:user /home/user
