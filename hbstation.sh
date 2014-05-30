@@ -16,11 +16,15 @@ declare -a PACKAGES=(
   curl
   openssh-server
   git
+  vim
   python-dev python-pip
   sqlite3
   libxml2-dev libxslt1-dev
   wireshark tshark
   xchat
+  spark
+  gimp
+  libffi-dev
   nodejs
 );
 
@@ -31,11 +35,18 @@ RUN_USER=0
 DISPLAY_HELP=0
 FORCE_LOGOUT=0
 
+SOURCE_URL='http://nuc-install.int.hackbrightacademy.com/'
 USER="user"
 USER_DIR="/home/user"
 DATE=`date +%Y%m%d`
 HOSTNAME=`/bin/uname -n`
 ARCH=`uname -p`
+
+# Which version of Ubuntu?
+UBUNTU_VERSION=`/usr/bin/lsb_release -r | awk '{ print $2 }'`
+if [[ $UBUNTU_VERSION == *14.* ]]; then
+  UBUNTU_14=Yes
+fi
 
   echo -e "
 
@@ -44,6 +55,8 @@ Hackbright Pair-Programming Station Setup
 
 This script will configure an Ubuntu-based Pair Programming 
 Station for Hackbright Academy Student Use.
+
+Use -h for help.
 "
 
 
@@ -109,7 +122,11 @@ fi
 # Check if the "user" is currently logged into the desktop.  
 if [ $RUN_BACKUP -eq 1 ] || [ $RUN_USER -eq 1 ]; then
     # Get the PID for the user's desktop tty session
-    PID=`who -u | grep tty | grep $USER | awk '{ print $6}'`
+    if [ $UBUNTU_14 ]; then
+      PID=`who -u | grep ' :0 ' | grep $USER | awk '{ print $6}'`
+    else
+      PID=`who -u | grep tty | grep $USER | awk '{ print $6}'`
+    fi
     #echo "PID: $PID"
 
     # If we got a PID, we need to log it out
@@ -181,7 +198,7 @@ if [ $RUN_PACKAGE -eq 1 ]; then
     fi
 
     # Install Additional Python packages with PIP
-    wget -O /tmp/python_requirements.txt http://nuc-install.int.hackbrightacademy.com/python_requirements.txt
+    wget -O /tmp/python_requirements.txt $SOURCE_URL/python_requirements.txt
     pip install -r /tmp/python_requirements.txt
 
     # Check that Sublime Text is installed
@@ -268,17 +285,23 @@ if [ $RUN_USER -eq 1 ]; then
 
     pushd /home
     # Download "Clean" user home directory
-    wget -O /tmp/user-clean.tar.gz http://nuc-install.int.hackbrightacademy.com/user-clean.tar.gz
+    wget -O /tmp/user-clean.tar.gz $SOURCE_URL/user-clean.tar.gz
 
     # Extract "clean" home directory
     /bin/gzip -cd /tmp/user-clean.tar.gz | tar -xvf -
     
     # Download Sublime License File
-    wget -O /home/user/.config/sublime-text-2/Settings/License.sublime_license http://nuc-install.int.hackbrightacademy.com/License.sublime_license
+    wget -O /home/user/.config/sublime-text-2/Settings/License.sublime_license $SOURCE_URL/License.sublime_license
 
     # Set ownership
     chown -R user:user /home/user
     popd
+
+    # Set the root ssh keys
+    mkdir -p /root/.ssh
+    wget -O /root/.ssh/authorized_keys $SOURCE_URL/hbstation_root_keys
+    chown -R root:root /root/.ssh
+    chmod 600 /root/.ssh/authorized_keys
 
 fi
 
