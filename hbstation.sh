@@ -18,6 +18,7 @@ declare -a PACKAGES=(
   git
   vim
   python-dev python-pip
+  bpython
   sqlite3
   libxml2-dev libxslt1-dev
   wireshark tshark
