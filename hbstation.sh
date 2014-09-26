@@ -23,7 +23,6 @@ declare -a PACKAGES=(
   libxml2-dev libxslt1-dev
   wireshark tshark
   xchat
-  spark
   gimp
   libffi-dev
   nodejs
