@@ -285,7 +285,11 @@ if [ $RUN_USER -eq 1 ]; then
 
     pushd /home
     # Download "Clean" user home directory
-    wget -O /tmp/user-clean.tar.gz $SOURCE_URL/user-clean.tar.gz
+    if [ $UBUNTU_14 ]; then
+      wget -O /tmp/user-clean.tar.gz $SOURCE_URL/user-clean.tar.gz
+    else
+      wget -O /tmp/user-clean.tar.gz $SOURCE_URL/user-clean-12.04.tar.gz
+    fi
 
     # Extract "clean" home directory
     /bin/gzip -cd /tmp/user-clean.tar.gz | tar -xvf -
