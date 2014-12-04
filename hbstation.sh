@@ -42,6 +42,8 @@ DATE=`date +%Y%m%d`
 HOSTNAME=`/bin/uname -n`
 ARCH=`uname -p`
 
+SPARK_URL='https://raw.githubusercontent.com/holman/spark/master/spark'
+
 # Which version of Ubuntu?
 UBUNTU_VERSION=`/usr/bin/lsb_release -r | awk '{ print $2 }'`
 if [[ $UBUNTU_VERSION == *14.* ]]; then
@@ -253,7 +255,15 @@ EOF
     unlink /usr/bin/sublime-text; ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/sublime-text
     unlink /usr/bin/sublime-text-2; ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/sublime-text-2
 
+  # Check that spark is installed (don't use the one from apt, that's the wrong program)
+  if [ ! -f "/usr/local/bin/spark" ]; then
+      echo "Spark not found, installing..."
+      CMD='wget -O /usr/local/bin/spark "'${SPARK_URL}'" 2>&1 | grep "Saving to:" | tail -1 | sed "s/^Saving to:\s*\`\(.*\)'"'"'$/\1/"'
+      SPARK_DOWNLOAD=$(eval $CMD)
  
+      echo "Downloaded: ${SPARK_DOWNLOAD}"
+  fi
+  
 fi
   
 
